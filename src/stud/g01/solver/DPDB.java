@@ -1,43 +1,14 @@
 package stud.g01.solver;
-
-import java.util.Arrays;
-
 public class DPDB {
 
     private int size;
     //不相交模式
-    private int[][] pattern;
+    private int[] pattern;
     private int[] factorials;
     //哈希
     private int[] indexMultiplier;
-    //test
-    public static void main(String[] args) {
-        int[][] pattern = {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}};
-        DPDB db = new DPDB(pattern);
-        int[] state = {1, 5, 3, 4, 2, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 0};
 
-        // 测试 h() 方法
-        int h = db.h(state);
-        System.out.println("h = " + h);
-
-        // 测试 getIndices() 方法
-        int[] indices = db.getIndices(state);
-        System.out.println("indices = " + Arrays.toString(indices));
-
-        // 测试 databaseIndex() 方法
-        int index = db.databaseIndex(state);
-        System.out.println("index = " + index);
-    }
-
-    //System.out.println("State: " + Arrays.toString(state));
-    //System.out.println("Index: " + index);
-    //System.out.println("Heuristic: " + h);
-    /*
-    int[][] pattern1 = {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}};不相交模式
-    DPDB db1 = new DPDB(pattern1); 构建数据库
-    int h1 = db1.h(state);
-     */
-    public DPDB(int[][] pattern) {
+    public DPDB(int[] pattern) {
         this.size = pattern.length;
         this.pattern = pattern;
         this.factorials = new int[size + 1];
@@ -50,15 +21,26 @@ public class DPDB {
             indexMultiplier[size - 1 - i] = factorials[i];
         }
     }
-//state = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 13, 14, 15, 12};初始状态格式
     //计算并返回状态 state 的估价函数值
     public int h(int[] state) {
         int sum = 0;
         for (int i = 0; i < size; i++) {
-            System.out.println(state.length);
-            sum += pattern[i][state[i]];
+            int val = state[i];
+            if (val != 0) {
+                int index = findIndex(pattern, val);
+                sum += Math.abs(index / size - i / size) + Math.abs(index % size - i % size);
+            }
         }
         return sum;
+    }
+
+    private int findIndex(int[] array, int value) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return i;
+            }
+        }
+        return -1;
     }
     //转换为其相对大小编号
     private int[] getIndices(int[] state) {
@@ -66,14 +48,17 @@ public class DPDB {
         boolean[] used = new boolean[size];
         for (int i = 0; i < size; i++) {
             int val = state[i];
-            int count = 0;
-            for (int j = 0; j < val; j++) {
-                if (!used[j]) {
-                    count++;
-                }
+            if (val != 0) {
+                int index = findIndex(pattern, val);
+                indices[i] = index;
+                used[index] = true;
             }
-            indices[i] = count;
-            used[val] = true;
+        }
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (!used[i]) {
+                indices[count++] = i;
+            }
         }
         return indices;
     }
@@ -86,5 +71,13 @@ public class DPDB {
         }
         return index;
     }
+    //test only
+    public static void main(String[] args) {
+        int[] pattern = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
+        DPDB dpdb = new DPDB(pattern);
+        int[] state1 = { 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+        System.out.println(dpdb.h(state1)); // 1
+        System.out.println(dpdb.databaseIndex(state1)); // 7
 
+    }
 }

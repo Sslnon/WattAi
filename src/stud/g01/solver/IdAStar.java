@@ -1,3 +1,4 @@
+
 package stud.g01.solver;
 
 import core.problem.Problem;

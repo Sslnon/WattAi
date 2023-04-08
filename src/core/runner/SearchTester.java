@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 import static core.solver.algorithm.heuristic.HeuristicType.*;
 import static stud.g01.problem.npuzzle.GUI.createAndShowGUI;
-
+//rex
 /**
  * 对学生的搜索算法进行检测的主程序
  * arg0: 问题输入样例      resources/pathfinding.txt

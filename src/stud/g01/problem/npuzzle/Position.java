@@ -7,8 +7,7 @@ import core.solver.algorithm.heuristic.Predictor;
 
 import java.util.*;
 
-import static core.solver.algorithm.heuristic.HeuristicType.MANHATTAN;
-import static core.solver.algorithm.heuristic.HeuristicType.MISPLACED;
+import static core.solver.algorithm.heuristic.HeuristicType.*;
 
 public class Position extends State {
 
@@ -82,11 +81,18 @@ public class Position extends State {
                 (state, goal) -> ((Position)state).misplaced());
         predictors.put(MANHATTAN,
                 (state, goal) -> ((Position)state).manhattan((Position) goal));
+        predictors.put(DISJOINT_PATTERN,
+                (state, goal) -> ((Position)state).disjoint_pattern((Position) goal));
     }
     public static Predictor predictor(HeuristicType type){
         return predictors.get(type);
     }
 
+    private int disjoint_pattern(Position goal)
+    {
+        return 0;
+        // TODO
+    }
     private int misplaced() {
         int[][] present = this.present;
         int cnt=0;

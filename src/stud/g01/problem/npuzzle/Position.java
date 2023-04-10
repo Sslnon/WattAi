@@ -4,6 +4,7 @@ import core.problem.Action;
 import core.problem.State;
 import core.solver.algorithm.heuristic.HeuristicType;
 import core.solver.algorithm.heuristic.Predictor;
+import stud.g01.solver.DPDB;
 
 import java.util.*;
 
@@ -87,10 +88,40 @@ public class Position extends State {
     public static Predictor predictor(HeuristicType type){
         return predictors.get(type);
     }
-
+    static final int[] tilePositions = {-1, 0, 0, 1, 2, 1, 2, 0, 1, 3, 4, 2, 3, 5, 4, 5};
+    static final int[] tileSubsets = {-1, 1, 0, 0, 0, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2};
     private int disjoint_pattern(Position goal)
     {
-        return 0;
+        int[][] present = this.present;
+        int index0 = 0, index1 = 0, index2 = 0;
+        int[] tmp=convertTo1D(present);
+//        System.out.println();
+//        System.out.println(tmp.length);
+//        System.out.println("tem1:"+tmp[1]);
+//        System.out.println();
+        for (int pos = 15; pos >= 0; --pos) {
+//            System.out.println();
+//            System.out.println("tem2:"+tmp[pos]);
+//            System.out.println();
+            final int tile = tmp[pos];
+            if (tile != 0) {
+                final int subsetNumber = tileSubsets[tile];
+                switch (subsetNumber) {
+                    case 2:
+                        index2 |= pos << (tilePositions[tile] << 2);
+                        break;
+                    case 1:
+                        index1 |= pos << (tilePositions[tile] << 2);
+                        break;
+                    default:
+                        index0 |= pos << (tilePositions[tile] << 2);
+                        break;
+                }
+            }
+        }
+        return DPDB.costTable_15_puzzle_0[index0] +
+                DPDB.costTable_15_puzzle_1[index1] +
+                DPDB.costTable_15_puzzle_2[index2];
         // TODO
     }
     private int misplaced() {
@@ -127,6 +158,29 @@ public class Position extends State {
 
     }
 
+
+    //2D->1D array
+    public static int[] convertTo1D(int[][] arr){
+        int numRows = arr.length;
+        int numCols = arr[0].length;
+        int[] flat = new int[numRows * numCols];
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                flat[i * numCols + j] = arr[i][j];
+            }
+        }
+        return flat;
+    }
+    //1D->2D
+    public static int[][] convertTo2D(int[] arr, int size) {
+        int[][] result = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                result[i][j] = arr[(i * size) + j];
+            }
+        }
+        return result;
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

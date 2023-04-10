@@ -15,9 +15,9 @@ public class DPDB {
             costTable_15_puzzle_2 = new byte[16777216];
 
     static {
-        loadStreamCostTable("resources/database1.db", costTable_15_puzzle_0);
-        loadStreamCostTable("resources/database2.db", costTable_15_puzzle_1);
-        loadStreamCostTable("resources/database3.db", costTable_15_puzzle_2);
+        loadStreamCostTable("resources/15-puzzle-663-0.db", costTable_15_puzzle_0);
+        loadStreamCostTable("resources/15-puzzle-663-1.db", costTable_15_puzzle_1);
+        loadStreamCostTable("resources/15-puzzle-663-2.db", costTable_15_puzzle_2);
     }
 
     private DPDB() { }

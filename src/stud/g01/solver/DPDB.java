@@ -1,83 +1,88 @@
 package stud.g01.solver;
+
+import algs4.util.StopwatchCPU;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 public class DPDB {
 
-    private int size;
-    //不相交模式
-    private int[] pattern;
-    private int[] factorials;
-    //哈希
-    private int[] indexMultiplier;
+    public static final byte[] costTable_15_puzzle_0 = new byte[4096],
+            costTable_15_puzzle_1 = new byte[16777216],
+            costTable_15_puzzle_2 = new byte[16777216];
 
-    public DPDB(int[] pattern) {
-        this.size = pattern.length;
-        this.pattern = pattern;
-        this.factorials = new int[size + 1];
-        this.indexMultiplier = new int[size];
-        this.factorials[0] = 1;
-        for (int i = 1; i <= size; i++) {
-            factorials[i] = factorials[i - 1] * i;
-        }
-        for (int i = size - 1; i >= 0; i--) {
-            indexMultiplier[size - 1 - i] = factorials[i];
-        }
-    }
-    //计算并返回状态 state 的估价函数值
-    public int h(int[] state) {
-        int sum = 0;
-        for (int i = 0; i < size; i++) {
-            int val = state[i];
-            if (val != 0) {
-                int index = findIndex(pattern, val);
-                sum += Math.abs(index / size - i / size) + Math.abs(index % size - i % size);
-            }
-        }
-        return sum;
+    static {
+        loadStreamCostTable("resources/database1.db", costTable_15_puzzle_0);
+        loadStreamCostTable("resources/database2.db", costTable_15_puzzle_1);
+        loadStreamCostTable("resources/database3.db", costTable_15_puzzle_2);
     }
 
-    private int findIndex(int[] array, int value) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == value) {
-                return i;
+    private DPDB() { }
+
+    private static void loadStreamCostTable(final String filename,
+                                            final byte[] costTable) {
+        InputStream is = DPDB.class.getResourceAsStream(filename);
+        DataInputStream dis = null;
+        try {
+            if (is == null) {
+                is = new FileInputStream(filename);
             }
-        }
-        return -1;
-    }
-    //转换为其相对大小编号
-    private int[] getIndices(int[] state) {
-        int[] indices = new int[size];
-        boolean[] used = new boolean[size];
-        for (int i = 0; i < size; i++) {
-            int val = state[i];
-            if (val != 0) {
-                int index = findIndex(pattern, val);
-                indices[i] = index;
-                used[index] = true;
+            dis = new DataInputStream(new BufferedInputStream(is));
+            int i = 0;
+            while (true) {
+                costTable[i++] = dis.readByte();
             }
+        } catch (final EOFException eofe) {
+
+        } catch (final FileNotFoundException fnfe) {
+            System.err.println("Error: Cannot find file " + filename + ".");
+            System.exit(1);
+        } catch (final IOException ioe) {
+            System.err.println("Error: Cannot read from file " + filename + ".");
+            System.exit(1);
+        } finally {
+            try {
+                if (dis != null) {
+                    dis.close();
+                }
+            } catch (final IOException ioe) { }
         }
-        int count = 0;
-        for (int i = 0; i < size; i++) {
-            if (!used[i]) {
-                indices[count++] = i;
-            }
-        }
-        return indices;
-    }
-    //计算并返回状态 state 在数据库中索引值
-    public int databaseIndex(int[] state) {
-        int[] indices = getIndices(state);
-        int index = 0;
-        for (int i = 0; i < size; i++) {
-            index += indices[i] * indexMultiplier[i];
-        }
-        return index;
     }
     //test only
     public static void main(String[] args) {
-        int[] pattern = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};
-        DPDB dpdb = new DPDB(pattern);
-        int[] state1 = { 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-        System.out.println(dpdb.h(state1)); // 1
-        System.out.println(dpdb.databaseIndex(state1)); // 7
+        // test loading cost tables
+        byte[] costTable_15_puzzle_0 = DPDB.costTable_15_puzzle_0;
+        byte[] costTable_15_puzzle_1 = DPDB.costTable_15_puzzle_1;
+        byte[] costTable_15_puzzle_2 = DPDB.costTable_15_puzzle_2;
 
+        System.out.println("Cost table for 15-puzzle-0 loaded: " + (costTable_15_puzzle_0.length == 4096));
+        System.out.println("Cost table for 15-puzzle-1 loaded: " + (costTable_15_puzzle_1.length == 16777216));
+        System.out.println("Cost table for 15-puzzle-2 loaded: " + (costTable_15_puzzle_2.length == 16777216));
+        System.out.println("Database 1:");
+        for (int i = 0; i < costTable_15_puzzle_0.length; i++) {
+            System.out.print(costTable_15_puzzle_0[i] + " ");
+            if ((i + 1) % 16 == 0) {
+                System.out.println();
+            }
+        }
+
+        System.out.println("\nDatabase 2:");
+        for (int i = 0; i < costTable_15_puzzle_1.length; i++) {
+            System.out.print(costTable_15_puzzle_1[i] + " ");
+            if ((i + 1) % 256 == 0) {
+                System.out.println();
+            }
+        }
+
+        System.out.println("\nDatabase 3:");
+        for (int i = 0; i < costTable_15_puzzle_2.length; i++) {
+            System.out.print(costTable_15_puzzle_2[i] + " ");
+            if ((i + 1) % 256 == 0) {
+                System.out.println();
+            }
+        }
     }
 }

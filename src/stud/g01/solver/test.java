@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 
 public class test {
-    //"D:/database1.db";
+    //"D:/15-puzzle-663-0.db";
     // ±¾µØÍ¼Æ¬Â·¾¶
     public static void main(String[] args){
         int index0 = 0, index1 = 0, index2 = 0;

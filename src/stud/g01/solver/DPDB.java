@@ -9,15 +9,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 public class DPDB {
-
+/*
+java PatternDatabaseGenerator 15 0,2,3,4,x,x,x,x,x,x,x,x,x,x,x,0 15-puzzle-663-0.db
+java PatternDatabaseGenerator 15 1,x,x,x,5,6,x,x,9,10,x,x,13,x,x,0 15-puzzle-663-1.db
+java PatternDatabaseGenerator 15 x,x,x,x,x,x,7,8,x,x,11,12,x,14,15,0 15-puzzle-663-2.db
+ */
     public static final byte[] costTable_15_puzzle_0 = new byte[4096],
             costTable_15_puzzle_1 = new byte[16777216],
             costTable_15_puzzle_2 = new byte[16777216];
 
     static {
-        loadStreamCostTable("resources/database1.db", costTable_15_puzzle_0);
-        loadStreamCostTable("resources/database2.db", costTable_15_puzzle_1);
-        loadStreamCostTable("resources/database3.db", costTable_15_puzzle_2);
+        loadStreamCostTable("resources/15-puzzle-663-0.db", costTable_15_puzzle_0);
+        loadStreamCostTable("resources/15-puzzle-663-1.db", costTable_15_puzzle_1);
+        loadStreamCostTable("resources/15-puzzle-663-2.db", costTable_15_puzzle_2);
     }
 
     private DPDB() { }

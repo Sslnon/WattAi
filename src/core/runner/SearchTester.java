@@ -44,7 +44,7 @@ public final class SearchTester {
         ProblemType type = ProblemType.valueOf("NPUZZLE");
 
         //任务第几阶段 args[2]
-        int step = Integer.parseInt("3");
+        int step = Integer.parseInt("1");
         //根据问题类型和当前阶段，获取所有启发函数的类型
         //寻路问题分别使用Grid距离和Euclid距离作为启发函数
         //NPuzzle问题的第一阶段，使用不在位将牌和曼哈顿距离

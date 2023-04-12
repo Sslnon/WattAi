@@ -22,7 +22,8 @@ public class PuzzleFeeder extends EngineFeeder {
         /* 读入各个问题 */
         ArrayList<Problem> problems = new ArrayList<>();
         int lineNo = 0;
-        while (lineNo < 10){//todo
+        //while (lineNo < 10){//todo before change
+        while (lineNo < 1){//todo
             int size = Integer.parseInt(String.valueOf(problemLines.get(lineNo).charAt(0)));
             //3,4
             //读入问题实例

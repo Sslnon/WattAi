@@ -6,12 +6,20 @@ import core.solver.algorithm.heuristic.HeuristicType;
 import core.solver.algorithm.heuristic.Predictor;
 import stud.g01.solver.DPDB;
 
+import java.io.*;
 import java.util.*;
 
 import static core.solver.algorithm.heuristic.HeuristicType.*;
 
 public class Position extends State {
-
+    static final int[] tilePositions = {-1, 0, 0, 1, 2, 1, 2, 0, 1, 3, 4, 2, 3, 5, 4, 5};
+    static final int[] tileSubsets = {-1, 1, 0, 0, 0, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2};
+    public static final int[] costTable_15_puzzle_0 = new int[4096],
+            costTable_15_puzzle_1 = new int[16777216],
+            costTable_15_puzzle_2 = new int[16777216];
+    private static final String file1="resources/663_0.txt";
+    private static final String file2="resources/663_1.txt";
+    private static final String file3="resources/663_2.txt";
     private final int[][] present;
     private int x_0;
     private int y_0;
@@ -20,7 +28,40 @@ public class Position extends State {
     public static int[][][] zobrist;
 
     public int hash_code=0;
-
+    static {
+        File firstFile=new File(file1);
+        File secondFile=new File(file2);
+        File thirdFile=new File(file3);
+        try {
+            BufferedReader br1=new BufferedReader(new FileReader(firstFile));
+            BufferedReader br2=new BufferedReader(new FileReader(secondFile));
+            BufferedReader br3=new BufferedReader(new FileReader(thirdFile));
+            String line=null;
+            int tmp;
+            int count=0;
+            while((line=br1.readLine())!=null)
+            {
+                tmp=Integer.parseInt(line);
+                costTable_15_puzzle_0[count++]= tmp;
+            }
+            count=0;
+            while((line=br2.readLine())!=null)
+            {
+                tmp=Integer.parseInt(line);
+                costTable_15_puzzle_1[count++]= tmp;
+            }
+            count=0;
+            while((line=br3.readLine())!=null)
+            {
+                tmp=Integer.parseInt(line);
+                costTable_15_puzzle_2[count++]= tmp;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public Position(int[][] present,int x_0,int y_0,int size) {
@@ -88,21 +129,15 @@ public class Position extends State {
     public static Predictor predictor(HeuristicType type){
         return predictors.get(type);
     }
-    static final int[] tilePositions = {-1, 0, 0, 1, 2, 1, 2, 0, 1, 3, 4, 2, 3, 5, 4, 5};
-    static final int[] tileSubsets = {-1, 1, 0, 0, 0, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2};
-    private int disjoint_pattern(Position goal)
-    {
-        int[][] present = this.present;
+    private int disjoint_pattern(Position goal)  {
+        int num=0;
+        num=getH(convert(this));
+        return num;
+    }
+    public static int getH(int [] tmp) {
+
         int index0 = 0, index1 = 0, index2 = 0;
-        int[] tmp=convertTo1D(present);
-//        System.out.println();
-//        System.out.println(tmp.length);
-//        System.out.println("tem1:"+tmp[1]);
-//        System.out.println();
         for (int pos = 15; pos >= 0; --pos) {
-//            System.out.println();
-//            System.out.println("tem2:"+tmp[pos]);
-//            System.out.println();
             final int tile = tmp[pos];
             if (tile != 0) {
                 final int subsetNumber = tileSubsets[tile];
@@ -119,10 +154,9 @@ public class Position extends State {
                 }
             }
         }
-        return DPDB.costTable_15_puzzle_0[index0] +
-                DPDB.costTable_15_puzzle_1[index1] +
-                DPDB.costTable_15_puzzle_2[index2];
-        // TODO
+        return costTable_15_puzzle_0[index0] +
+                costTable_15_puzzle_1[index1] +
+                costTable_15_puzzle_2[index2];
     }
     private int misplaced() {
         int[][] present = this.present;
@@ -160,16 +194,16 @@ public class Position extends State {
 
 
     //2D->1D array
-    public static int[] convertTo1D(int[][] arr){
-        int numRows = arr.length;
-        int numCols = arr[0].length;
-        int[] flat = new int[numRows * numCols];
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                flat[i * numCols + j] = arr[i][j];
-            }
+    public int[] convert(Position position)
+    {
+        int size=position.getSize();
+        int[] tmp=new int[size*size];
+        int[][] state=position.getPresent();
+        for(int i=0;i<size*size;i++)
+        {
+            tmp[i]=state[i/size][i%size];
         }
-        return flat;
+        return tmp;
     }
     //1D->2D
     public static int[][] convertTo2D(int[] arr, int size) {

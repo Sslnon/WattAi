@@ -2,10 +2,12 @@
 package stud.g01.solver;
 
 import core.problem.Problem;
+import core.problem.State;
 import core.solver.algorithm.heuristic.Predictor;
 import core.solver.algorithm.searcher.AbstractSearcher;
 import core.solver.queue.Frontier;
 import core.solver.queue.Node;
+import stud.g01.problem.npuzzle.Position;
 
 import java.util.Deque;
 import java.util.Stack;
@@ -41,13 +43,16 @@ public class IdAStar extends AbstractSearcher {
             //统计扩展结点数
             while (!openStack.empty()) {
                 Node node = openStack.pop();
-
+                State tmps = node.getState();
+                Position d =(Position)tmps;
+                d.print();
                 //更新裁剪值为未被探索节点中最小的评估值
                 if (problem.goal(node.getState())) {
                     return generatePath(node);
                 }
                 //当小于等于裁剪值时，继续向深处搜索
                 for (Node child : problem.childNodes(node, predictor)) {
+
                     //剪枝，防止节点探索回到父节点
                     if (child.evaluation() <= cutoff) {
                         if (node.getParent() == null || !node.getParent().equals(child)) {

@@ -23,7 +23,9 @@ java PatternDatabaseGenerator 15 x,x,x,x,x,x,7,8,x,x,11,12,x,14,15,0 15-puzzle-6
         loadStreamCostTable("resources/15-puzzle-663-1.db", costTable_15_puzzle_1);
         loadStreamCostTable("resources/15-puzzle-663-2.db", costTable_15_puzzle_2);
     }
-
+    private static final String file1="resources/663_0.txt";
+    private static final String file2="resources/663_1.txt";
+    private static final String file3="resources/663_2.txt";
     private DPDB() { }
 
     private static void loadStreamCostTable(final String filename,

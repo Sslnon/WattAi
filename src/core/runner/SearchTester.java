@@ -15,7 +15,7 @@ import java.util.Deque;
 import java.util.Scanner;
 
 import static core.solver.algorithm.heuristic.HeuristicType.*;
-import static stud.g01.problem.npuzzle.GUI.createAndShowGUI;
+
 //rex 10点45分
 //test 2
 /**
@@ -58,7 +58,6 @@ public final class SearchTester {
             //solveProblems方法根据不同启发函数生成不同的searcher
             //从Feeder获取所使用的搜索引擎（AStar，IDAStar等），
             solveProblems(problems, feeder.getIdaStar(heuristicType), heuristicType);
-            System.out.println(problems);
             System.out.println();
         }
         System.out.println("<---------------OK--------------->");
@@ -86,6 +85,7 @@ public final class SearchTester {
         else {
             //NPuzzle问题的第一阶段，使用不在位将牌和曼哈顿距离
             if (step == 1) {
+
                 heuristics.add(MANHATTAN); //todo 不同的解
             }
 

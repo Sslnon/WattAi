@@ -5,23 +5,24 @@ import javax.swing.JButton;
 import javax.swing.*;
 
 public class GUI extends javax.swing.JFrame {
+    private javax.swing.JPanel jPanel1;
+    public GUI()
+    {
+        super("n-Puzzle");
+        initComponents();
+        //center the frame in the screen on open
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setAlwaysOnTop(true);
 
-    public static void createAndShowGUI() {
-
-        // 确保一个漂亮的外观风格
-        JFrame.setDefaultLookAndFeelDecorated(false);
-
-        // 创建及设置窗口
-        JFrame frame = new JFrame("HelloWorldSwing");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // 添加 "Hello World" 标签
-//        JLabel label = new JLabel("Hello World");
-//        frame.getContentPane().add(label);
-
-        // 显示窗口
-        frame.pack();
-        frame.setVisible(true);
     }
+    private void initComponents() {
+        jPanel1 = new javax.swing.JPanel();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+
+
+
+    }
 }

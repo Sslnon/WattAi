@@ -62,6 +62,8 @@ public class PuzzleFinding extends Problem {
 
     @Override
     public void showSolution(Deque<Node> path) {
+//        GUI gui = new GUI();
+//        gui.setVisible(true);
         Position g=(Position)goal;
         for (Node node : path) {
             Position p = (Position) node.getParent().getState();

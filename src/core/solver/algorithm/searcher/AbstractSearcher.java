@@ -22,12 +22,13 @@ public abstract class AbstractSearcher {
     protected final Set<State> explored = new HashSet<>();
 
     // 还未扩展的节点队列
-    protected Frontier frontier = null;
+    protected Frontier frontier;
 
     protected int nodesGenerated = 0;   //已生成的节点的个数
     protected int nodesExpanded = 0;    //已扩展的节点的个数
 
-    public AbstractSearcher() {
+    public AbstractSearcher(Frontier frontier) {
+        this.frontier =frontier;
     }
 
 

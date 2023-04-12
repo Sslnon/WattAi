@@ -24,7 +24,7 @@ public final class BestFirstSearcher extends AbstractSearcher {
 	 * @param predictor 具体的预测器（不在位将牌，曼哈顿距离等）
 	 */
 	public BestFirstSearcher(Frontier frontier, Predictor predictor) {
-		super();
+		super(frontier);
 		this.predictor = predictor;
 	}
 

@@ -15,8 +15,8 @@ import java.util.Stack;
 public class IdAStar extends AbstractSearcher {
     private final Predictor predictor;
     private final Stack<Node> openStack;
-    public IdAStar(Predictor predictor) {
-        super();
+    public IdAStar(Frontier frontier,Predictor predictor) {
+        super(frontier);
         this.predictor = predictor;
         openStack = new Stack<Node>();
         //closeStack = new HashMap<Integer, Integer>();
@@ -34,7 +34,7 @@ public class IdAStar extends AbstractSearcher {
         int cutoff = root.evaluation();
 
         //最大迭代深度
-        int maxIteratorDepth = 70;
+        int maxIteratorDepth = 256;
         while (cutoff < maxIteratorDepth) {
             openStack.push(root);
             //下一轮迭代的裁剪阈值
@@ -43,9 +43,9 @@ public class IdAStar extends AbstractSearcher {
             //统计扩展结点数
             while (!openStack.empty()) {
                 Node node = openStack.pop();
-                State tmps = node.getState();
-                Position d =(Position)tmps;
-                d.print();
+//                State tmps = node.getState();
+//                Position d =(Position)tmps;
+//                d.print();
                 //更新裁剪值为未被探索节点中最小的评估值
                 if (problem.goal(node.getState())) {
                     return generatePath(node);

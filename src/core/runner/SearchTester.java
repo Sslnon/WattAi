@@ -33,7 +33,7 @@ public final class SearchTester {
 
         //根据args[3]提供的类名生成学生的EngineFeeder对象
         EngineFeeder feeder = (EngineFeeder)
-                Class.forName("stud.g01.runner.PuzzleFeeder")
+                Class.forName("stud.g19.runner.PuzzleFeeder")
                         .getDeclaredConstructor().newInstance();
 
     ////从文件读入所有输入样例的文本； args[0]：输入样例文件的相对路径
@@ -57,7 +57,7 @@ public final class SearchTester {
         for (HeuristicType heuristicType : heuristics) {
             //solveProblems方法根据不同启发函数生成不同的searcher
             //从Feeder获取所使用的搜索引擎（AStar，IDAStar等），
-            solveProblems(problems, feeder.getIdaStar(heuristicType), heuristicType);
+            solveProblems(problems, feeder.getIdaStar(heuristicType), heuristicType);//todo A* IDA*
             System.out.println();
         }
         System.out.println("<---------------OK--------------->");
@@ -86,7 +86,7 @@ public final class SearchTester {
             //NPuzzle问题的第一阶段，使用不在位将牌和曼哈顿距离
             if (step == 1) {
 
-                heuristics.add(MANHATTAN); //todo 不同的解
+                heuristics.add(MISPLACED); //todo 不同的解
             }
 
             //NPuzzle问题的第三阶段，使用Disjoint Pattern
@@ -118,7 +118,7 @@ public final class SearchTester {
             }
 
 //             解路径的可视化
-            problem.showSolution(path);
+            //problem.showSolution(path);
 
 
             System.out.println("启发函数：" + heuristicType + "，解路径长度：" + path.size() + "，执行了" + time1 + "s，" +

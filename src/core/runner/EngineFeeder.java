@@ -8,7 +8,7 @@ import core.solver.algorithm.heuristic.HeuristicType;
 import core.solver.algorithm.heuristic.Predictor;
 import core.solver.queue.Frontier;
 import stud.queue.StackFrontier;
-import stud.g01.solver.IdAStar;
+import stud.g19.solver.IdAStar;
 
 import java.util.ArrayList;
 

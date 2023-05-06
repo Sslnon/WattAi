@@ -6,26 +6,28 @@ public class DPDB {
     public int[][] database = new int[4095][5];
 
     public DPDB()
-    //Tries to load the database from a file. If it doesn't exist it builds it manually and saves it.
     {
             buildDatabase();
     }
-
+    // create an instance of DPDB and build the database
     public static void main(String[] args){
         DPDB d1 = new DPDB();
     }
-
+    // method to build the database
     private void buildDatabase()  {
-        //fetches a list of all possible nodes, hashes them, calculates the heuristic, then saves this information to a database
         ArrayList<Position> allNodes = makeAllNodes();
+        // get all possible positions
         try {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\Rex\\Desktop\\111\\663_0.txt", false)));
             for (Position n : allNodes) {
                 int[] temp = new int[2];
                 temp = hasher(n);
                 ArrayList<Integer> nums = findNums(n);
+                // calculate the heuristic value
                 int calc = calculateHeuristic(n, nums.get(0), nums.get(1), nums.get(2));
+                database[temp[0]][temp[1]]=calc;
                 System.out.println(calc);
+                // write the heuristic value to the file
                 out.write(calc+"");
                 String str="\r\n";
                 out.write(str);
@@ -36,9 +38,8 @@ public class DPDB {
             i.printStackTrace();
         }
     }
-
+    // method to find the numbers in a position
     private ArrayList<Integer> findNums(Position sn) {
-        //finds the location of the numbers on the partial puzzle
         ArrayList<Integer> nums = new ArrayList<>();
         for(int i = 0; i <4; i++) {
             for(int j = 0; j < 4;j++) {
@@ -49,9 +50,8 @@ public class DPDB {
         }
         return nums;
     }
-
-    private ArrayList<Position> makeAllNodes(){
-        //makes every possible combination of partial puzzles. Does not allow for illegal states
+    // method to generate all possible positions
+    private ArrayList<Position> makeAllNodes(){ //todo
         ArrayList<Position> allNodes = new ArrayList<>();
         for(int c = 0;c < 16; c++) {
             for(int b = 0; b < 16; b++) {
@@ -75,31 +75,24 @@ public class DPDB {
     }
 
     private Puzzle makePartialPuzzle(int a, int b, int c, int valA, int valB, int valC){
-        //Creates the partial puzzle based on the values and locations generated in makeAllNodes
-        int x,y =0;
         int[][] grid = new int[4][4];
         for(int i = 0; i < 4;i++)
             for(int j = 0;j < 4;j++)
                 grid[i][j] = 0;
 
-        x =a%4;
-        y = a/4;
-        grid[y][x] = valA;
-
-        x =b%4;
-        y = b/4;
-        grid[y][x] = valB;
-
-        x =c%4;
-        y = c/4;
-        grid[y][x] = valC;
+        int[] indices = {a, b, c};
+        int[] values = {valA, valB, valC};
+        for (int i = 0; i < 3; i++) {
+            int x = indices[i] % 4;
+            int y = indices[i] / 4;
+            grid[y][x] = values[i];
+        }
 
         Puzzle p = new Puzzle(grid);
         return p;
     }
-
+    // Method to generate a hash value for a given position
     private int[] hasher(Position sn) {
-        //finds the index and subset that a puzzle belongs in the database
         int ret[] = new int[2];
         int index1 = 0;
         int index2 = 0;
@@ -114,9 +107,8 @@ public class DPDB {
         }
         return ret;
     }
-
+    // Method to check if a number n is present in the puzzle grid
     private boolean puzzleContains(Position sn, int n) {
-        //checks to see if a number is in a given puzzle
         for(int i =0;i<4;i++) {
             for(int j = 0; j <4;j++) {
                 if(sn.puzzle.grid[i][j] == n) {
@@ -126,9 +118,8 @@ public class DPDB {
         }
         return false;
     }
-
+    // Method to calculate the heuristic value for a given position and three numbers
     private int calculateHeuristic(Position sn, int num1, int num2, int num3) {
-        //Calculates the Manhattan distance + 2 for any collisions it runs into
         int totalHeuristic =0;
         Puzzle p = sn.puzzle;
         for(int r = 0; r < 4; r++)
@@ -138,8 +129,8 @@ public class DPDB {
                 if(p.grid[r][c] == num1 || p.grid[r][c] == num2 ||p.grid[r][c] == num3)
                 {
                     totalHeuristic += (Math.abs((p.grid[r][c]-1)/4 - r)) + (Math.abs((p.grid[r][c]-1)%4 - c));
-                    if(c<3 && p.grid[r][c] > p.grid[r][c+1] && (p.grid[r][c]-1)/4 == (p.grid[r][c+1]-1)/4  && (p.grid[r][c]-1)/4 ==r && p.grid[r][c+1] !=0) {
-                        //A collision happens when a tile is greater than a tile to its right and both tiles are supposed to end up in the same row.
+                    if(c<3 && p.grid[r][c] > p.grid[r][c+1] && (p.grid[r][c]-1)/4 == (p.grid[r][c+1]-1)/4
+                            && (p.grid[r][c]-1)/4 ==r && p.grid[r][c+1] !=0) {
                         totalHeuristic +=2;
                     }
                 }
@@ -147,9 +138,8 @@ public class DPDB {
         }
         return totalHeuristic;
     }
-
+    // Method to find the location of a given tile in the puzzle grid
     private int findLocation(Position sn, int tile) {
-        //Finds absolute location of a number in a puzzle as if it was stored in an array.
         for(int i =0;i<4;i++) {
             for(int j = 0; j <4;j++) {
                 if(sn.puzzle.grid[i][j] == tile) {

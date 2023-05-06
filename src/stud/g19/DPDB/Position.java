@@ -3,14 +3,19 @@ package stud.g19.DPDB;
  * Search node class for solving the 15-puzzle
  */
 
-class Position implements Comparable<Position>
-{
-    public Puzzle puzzle;			// the puzzle state
-    public int pathCost;			// current path cost to this state
-    public int estimate;			// estimate of # of moves to goal state (used only by informed search methods)
-    public Position parent;		// state which preceded this state
-    public int action;				// action which produced this state
+import core.problem.Action;
+import core.problem.State;
 
+class Position extends State
+{
+    // Instance variables for the class Position.
+    public Puzzle puzzle;           // A reference to a Puzzle object.
+    public int pathCost;            // The cost of the path from the initial state to the current state.
+    public int estimate;            // The estimated cost from the current state to the goal state.
+    public Position parent;         // The parent Position of the current Position.
+    public int action;              // The action taken to reach the current Position.
+
+    // Constructor for creating a new Position object.
     public Position(Puzzle puz, int p, int e, Position par, int a)
     {
         puzzle = new Puzzle(puz);
@@ -20,10 +25,18 @@ class Position implements Comparable<Position>
         action = a;
     }
 
-    public int compareTo(Position other)
-    {
-        return pathCost + estimate - (other.pathCost + other.estimate);
+    @Override
+    public void draw() {
+
     }
 
+    @Override
+    public State next(Action action) {
+        return null;
+    }
 
+    @Override
+    public Iterable<? extends Action> actions() {
+        return null;
+    }
 }
